@@ -5,7 +5,9 @@
 using namespace std;
 using namespace std::chrono;
 
-void merge(int arr[], int left, int middle, int right) //where these indices of the array so left is left index
+
+
+void merge(double arr[], int left, int middle, int right) //where these indices of the array so left is left index
 {
 		//counters
 		int i;
@@ -15,8 +17,8 @@ void merge(int arr[], int left, int middle, int right) //where these indices of 
 		int nL = middle - left + 1; //number of elements in the left array
 		int nR = right - middle; //number of elements in the right array
 
-		int leftArr[nL];
-		int rightArr[nR];
+		double leftArr[nL];
+		double rightArr[nR];
 
 
 		for (i = 0; i < nL; ++i)
@@ -60,7 +62,7 @@ void merge(int arr[], int left, int middle, int right) //where these indices of 
 		}
 }
 
-void mergeSort(int arr[], int left, int right) //l, r indexes to specify subarray
+void mergeSort(double arr[], int left, int right) //l, r indexes to specify subarray
 {
 		if (left < right)
 		{
@@ -76,11 +78,11 @@ void mergeSort(int arr[], int left, int right) //l, r indexes to specify subarra
 		}
 }
 
-void bubbleSort(int arr[], int length)
+void bubbleSort(double arr[], int length)
 {
 	for (int i = 0; i < length;++i)
 	{
-		int temp = 0;
+		double temp = 0;
 		for (int j = 0; j < length - 1;++j)
 		{
 			if (arr[j]>arr[j+1])
@@ -94,9 +96,10 @@ void bubbleSort(int arr[], int length)
 }
 
 
-void selectionSort(int arr[], int n)
+void selectionSort(double arr[], int n)
 {
-	int i, j, minI, temp;
+	int i, j, minI;
+	double temp;
 	for (i = 0; i < n; ++i)
 	{
 		minI = i;
@@ -117,11 +120,11 @@ void selectionSort(int arr[], int n)
 }
 
 
-void insertionSort(int arr[], int length)
+void insertionSort(double arr[], int length)
 {
 	for (int j = 1; j < length; ++j)
 	{
-		int temp = arr[j];
+		double temp = arr[j];
 		int k = j;
 		while (k>0&&arr[k-1]>=temp)
 		{
@@ -132,19 +135,19 @@ void insertionSort(int arr[], int length)
 	}
 }
 
-void printArr(int arr[], int length)
+void printArr(double arr[], int length)
 {
 		for (int i = 0; i < length; i++)
 	    		cout << arr[i] << ", ";
 		cout << endl;
 }
 
-string stringArr(int arr[], int length)
+string stringArr(double arr[], int length)
 {
 		string ret = "";
 		for (int i = 0; i < length; i++)
 	  {
-		 		ret += arr[i];
+		 		ret += to_string(arr[i]);
 				ret += ",";
 		}
 		ret += "\n";
@@ -183,10 +186,10 @@ int main()
 		getline( analyze, data );
 		int size = stoi(data);
 
-		int bubbleArr[size];
-		int selectionArr[size];
-		int insertionArr[size];
-		int mergeArr[size];
+		double bubbleArr[size];
+		double selectionArr[size];
+		double insertionArr[size];
+		double mergeArr[size];
 
 		int i = 0;
 		while( !analyze.eof() && i < size)
@@ -194,10 +197,10 @@ int main()
 		    getline( analyze, data );
 		    //process the line
 				//then put it into the arrays
-				bubbleArr[i] = stoi(data);
-				selectionArr[i] = stoi(data);
-				insertionArr[i] = stoi(data);
-				mergeArr[i] = stoi(data);
+				bubbleArr[i] = stod(data);
+				selectionArr[i] = stod(data);
+				insertionArr[i] = stod(data);
+				mergeArr[i] = stod(data);
 
 				++i;
 		}
@@ -205,41 +208,46 @@ int main()
 		analyze.close();
 
 		ofstream clout; //get it like cout but clout, see ten years gone LZ, all things return to how they were
-		clout.open ("data.txt");
+		clout.open ("sorted.txt");
 
 		//source Stack overflow for time calculations
+
 		clout << "merge sort" << endl;
-		milliseconds start = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		auto start = std::chrono::high_resolution_clock::now();
 		mergeSort(mergeArr, 0, size);
-		milliseconds finish = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		auto end = std::chrono::high_resolution_clock::now();
+		auto difference = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 		clout << stringArr(mergeArr, size);
-		clout << "merge runtime:" << (long)(finish - start) << endl << endl;
+		clout << "merge runtime:" << difference << endl << endl;
 
 		clout << "selection sort" << endl;
-		start = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		start = std::chrono::high_resolution_clock::now();
 		selectionSort(selectionArr, size);
-		finish = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		end = std::chrono::high_resolution_clock::now();
 		clout << stringArr(mergeArr, size);
-		clout << "selection runtime:" << (long)(finish - start) << endl << endl;
+		difference = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		clout << "selection runtime:" << difference << endl << endl;
 
 
 		clout << "insertion sort" << endl;
-		start = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		start = std::chrono::high_resolution_clock::now();
 		insertionSort(insertionArr, size);
-		finish = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		end = std::chrono::high_resolution_clock::now();
 		clout << stringArr(mergeArr, size);
-		clout << "insertion runtime:" << (long)(finish - start) << endl << endl;
+		difference = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		clout << "insertion runtime:" << difference << endl << endl;
 
 
 		clout << "bubble sort" << endl;
-		start = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		start = std::chrono::high_resolution_clock::now();
 		bubbleSort(bubbleArr, size);
-		finish = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+		end = std::chrono::high_resolution_clock::now();
 		clout << stringArr(mergeArr, size);
-		clout << "bubble runtime:" << (long)(finish - start) << endl << endl;
+		difference = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		clout << "bubble runtime:" << difference << endl << endl;
 
 
 		clout.close();
 
-
+		return 0;
 }
